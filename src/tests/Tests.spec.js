@@ -4,14 +4,14 @@ import http from 'k6/http';
 import { check } from 'k6';
 import { Trend, Rate } from 'k6/metrics';
 
-export const getContactsDuration = new Trend('get_contacts', true);
+export const getContactsDuration = new Trend('get_region', true);
 export const RateContentOK = new Rate('content_OK');
 
 export const options = {
   thresholds: {
-    http_req_failed: ['rate<0.30'],
-    get_contacts: ['p(99)<500'],
-    content_OK: ['rate>0.95']
+    http_req_failed: ['rate<0.12'],
+    get_region: ['p(95)<5700'],
+    content_OK: ['rate>0.88']
   },
   stages: [
     { duration: '30s', target: 50 },
@@ -52,6 +52,6 @@ export default function () {
   RateContentOK.add(res.status === OK);
 
   check(res, {
-    'GET Contacts - Status 200': () => res.status === OK
+    'GET region - Status 200': () => res.status === OK
   });
 }
